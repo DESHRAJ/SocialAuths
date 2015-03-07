@@ -5,11 +5,15 @@ from django.template import Context,RequestContext
 from django.contrib.auth.decorators import login_required
 from bs4 import BeautifulSoup
 from lxml import etree
+from urllib import FancyURLopener
 import urllib2
 import requests
 import re
-import urllib2
 import os
+import sys
+import simplejson
+import cStringIO
+import Image
 # Create your views here.
 def home(request):
 	''' View for the home page of the application'''
@@ -28,40 +32,38 @@ def trainModel(request):
 	if request.user.is_authenticated():
 		if request.GET:
 			category = request.GET.get('category')
+			category = category.lower()
+			# os.makedirs('/'+request.user.email+'/train/'+category)
+			# os.makedirs('/'+request.user.email+'/test')
 			fetchFromGoogle(category)
-			# print "$$$$$$$$$$$$$", category
-			# searchUrl='https://www.google.com/search?tbm=isch&q='+str(category)+'&gws_rd=cr&ei=8Vb6VJGvOIe5uASIk4KwAQ'
-			# print searchUrl
-			# page=urllib2.urlopen(searchUrl).read()
-			# x=etree.HTML(page)
-			# print x
-			# url=x.xpath('//td[@class="titleColumn"]/a/@href')
-			# rank=x.xpath('//td[@class="titleColumn"]/span[@name="ir"]/text()')
-			# title=x.xpath('//td[@class="titleColumn"]/a/@title')
 		return render_to_response('train.html',{'user':request.user},context_instance=RequestContext(request))
 	return HttpResponseRedirect('/')
 
-def fetchFromGoogle(query):
-	image_type = "Action"
-	# you can change the query for the image  here  
-	# query = "Terminator 3 Movie"
-	query= query.split()
-	query='+'.join(query)
-	url="https://www.google.co.in/searches_sm=122&source=lnms&tbm=isch&sa=X&ei=4r_cVID3NYayoQTb4ICQBA&ved=0CAgQ_AUoAQ&biw=1242&bih=619&q="+query
-	print url
-	header = {'User-Agent': 'Mozilla/5.0'} 
-	soup = get_soup(url,header)
-	images = [a['src'] for a in soup.find_all("img", {"src": re.compile("gstatic.com")})]
-	for img in images:
-		print "##########   ",img
-	# for img in images:
-	# 	raw_img = urllib2.urlopen(img).read()
-	# 	#add the directory for your image here 
-	# 	DIR="C:\Users\hp\Pictures\\valentines\\"
-	# 	cntr = len([i for i in os.listdir(DIR) if image_type in i]) + 1
-	# 	print cntr
-	# 	f = open(DIR + image_type + "_"+ str(cntr)+".jpg", 'wb')
-	# 	f.write(raw_img)
-	# 	f.close()
-def get_soup(url,header):
-	return BeautifulSoup(urllib2.urlopen(urllib2.Request(url,headers=header)))
+def fetchFromGoogle(searchTerm):
+	''' Function for fetching 20 images using the google apis'''
+	fetcher = urllib2.build_opener()
+	startIndex = 0
+	i,urls=1,1
+	while(i<=20):
+		flag=0
+		searchUrl = "http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=" + str(searchTerm)+'&rsz=8'+'&start='+str(i)
+		print searchUrl
+		f = fetcher.open(searchUrl)
+		deserialized_output = simplejson.load(f)
+		for img in deserialized_output['responseData']['results']:
+			if urls>=20:
+				flag=1
+				break
+			else:
+				file = cStringIO.StringIO(urllib2.urlopen(img['unescapedUrl']).read())
+				img = Image.open(file)
+				directory = "/home/dypy/Pictures/cloudcv/"+str(searchTerm)
+				if not os.path.exists(directory):
+					os.makedirs(directory)
+				img.save(directory+"/image"+str(urls)+".jpg", format="JPEG")
+				# urls.append(img['unescapedUrl'])
+				# print "$$$$$$$$$$", "          ", len(urls)
+				urls+=1
+		if flag==1:
+			break
+		i+=8

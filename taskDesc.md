@@ -1,6 +1,6 @@
 For people who want to work on creating web-pages , building the API etc, the task would be along the following lines:
 
-We have a train - a - class page on cloudcv.org that takes training images for new categories like "coke cans, cakes , pastries" whatever , and train a classifier which modifies the default caffe model (that consist of just the 1000 imagenet categories) to add these new categories to this default model. This new model can then be used to classify a new test image.
+We have a train - a - class page on cloudcv.org that takes training images for new categories like "coke cans, cakes , pastries" whatever , and train a classifier which modifies the default caffe model (that consist of just the 1000 imagenet categories) to add these new categories to this default model. This new model can then be used to classify a new test image.	
 Now this was all background,
 
 The task is 
@@ -9,7 +9,7 @@ The fist part is giving training images for each category.
 1. The user will type a category name  and you should query google images/ flicker/ imgur etc with this name and pick top 20 images from the search result.
 2. Send these images to the server and store these images in the following format: 
 
-/jobid/train / category_name / images. 
+/jobid/train / category_name / images.
 /jobid/test/
 /jobid/util/
 
