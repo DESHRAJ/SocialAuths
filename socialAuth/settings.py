@@ -26,7 +26,8 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-SITE_ID = 2
+SITE_ID = 3
+
 
 # Application definition
 
@@ -127,3 +128,7 @@ AUTHENTICATION_BACKENDS = (
 LOGIN_REDIRECT_URL = "/dashboard"
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+LOGIN_URL = "/login"
+
+LOGOUT_URL = "/logout"
