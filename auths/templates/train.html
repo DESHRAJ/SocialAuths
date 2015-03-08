@@ -5,6 +5,9 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script src="/static/js/jquery-1.11.0.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+
   </head>
 
   <body>
@@ -27,7 +30,7 @@
           </ul>
           {% if user.is_authenticated %}
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="/logout">Default</a></li>
+            <li><a href="/logout">Logout</a></li>
           </ul>
           {% endif %}
         </div>
@@ -36,34 +39,47 @@
 
     <div class="container">
       <div class="jumbotron">
-        <h1>Train a Particular Model</h1>
-        <p>Here we are to train the new categoried according to the user input. If you want some category "coffe, mug " etc. then they can be easily trained. Just type the name of the material yoiu want to train and we will fetch the top 20 materials from google/flicker and train the model according to those fetched images. </p>
-        <form class="form-horizontal" action="" method="get">
+        <h2><b>Train a Model</b></h2>
+        <h3 style="font-size:16px;">How it works?</h3>
+        <ol>
+          <li>Enter the category you want to train. </li>
+          <li>We will fetch 20 images of that category from Google and will train our model using those images.</li>
+          <li>Then, upload any image of that category and using our Classifier at the backend we will show the result of the test.</li>
+        </ol>
+        <div class="form-horizontal" >
             <div class="form-group">
               <label class="col-md-4 control-label" for="category">Enter the Category</label>  
               <div class="col-md-4">
-              <input id="category" name="category" type="text" placeholder="Category Name" class="form-control input-md" required="">
               <span class="help-block">Example: Cat</span>  
+              <input id="category" name="category" type="text" placeholder="Category Name" class="form-control input-md" required="">
               </div>
             </div>
             <div class="form-group">
               <label class="col-md-4 control-label" for="submit"></label>
               <div class="col-md-4">
-                <button id="submit" class="btn btn-primary">Submit</button>
+                <button id="submit" class="btn btn-primary" onclick="fetchImages();">Submit</button>
               </div>
             </div>
-        </form>
+          </div>
         </p>
       </div>
     </div>
     <script type="text/javascript">
-    // function fetchData () {
-    //   var model = document.getElementById('cat')
-    //   $.ajax{
-        
-    //   }
-    //   // body...
-    // }
+    function fetchImages() {
+      var category = document.getElementById('category').value;
+      // alert(category);
+      // alert("Hey i am starting ajax call");
+      $.ajax({
+            url     : '/trainclass', // the url where we want to POST
+            data    : {'category':category},
+            type: 'GET',
+            success: function() {   },
+            error: function() {alert("error");},
+          })  
+            .done(function(data) {
+                      console.log(data);
+            });
+    }
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
   </body>
