@@ -2,12 +2,16 @@
 <html lang="en">
   <head>
     <title>Train A Model</title>
+    <meta charset="utf-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/static/css/dropzone.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
     <script src="/static/js/jquery-1.11.0.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="/static/js/dropzone.js"></script>
   </head>
 
   <body>
@@ -48,23 +52,40 @@
         </ol>
         <div class="form-horizontal" >
             <div class="form-group">
-              <label class="col-md-4 control-label" for="category">Enter the Category</label>  
-              <div class="col-md-4">
+              <label class="col-md-6 control-label" for="category">Enter the Category</label>  
+              <div class="col-md-6">
               <span class="help-block">Example: Cat</span>  
-              <input id="category" name="category" type="text" placeholder="Category Name" class="form-control input-md" required="">
+              <input id="category" name="category" type="text" placeholder="Category Name" class="form-control input-md" required="" onchange="setText();">
               </div>
             </div>
             <div class="form-group">
-              <label class="col-md-4 control-label" for="submit"></label>
-              <div class="col-md-4">
-                <button id="submit" class="btn btn-primary" onclick="fetchImages();">Submit</button>
+              <label class="col-md-6 control-label" for="submit"></label>
+              <div class="col-md-6">
+                <button id="submit" class="btn btn-primary" onclick="fetchImages(); this.disabled=True;">Submit</button>
               </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-6 control-label" for="trainaclass"></label>
+            <div class="col-md-6">
+              <button id="trainaclass" name="trainaclass" class="btn btn-info btn-md  ">Train the Class: Cat</button>
             </div>
           </div>
         </p>
       </div>
+      <div class="container">
+        <div class="jumbotron">
+          <h2>Test the Model</h2>
+          <!-- <form class="dropzone" action=""></form> -->
+          <form action="/testaclass" class="dropzone"></form>
+        </div>
+      </div>
     </div>
     <script type="text/javascript">
+    function setText() {
+      var text = document.getElementById('category').value;
+      document.getElementById('submit').innerHTML = "Train the model "+text;
+    }
     function fetchImages() {
       var category = document.getElementById('category').value;
       // alert(category);
