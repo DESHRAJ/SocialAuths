@@ -15,6 +15,7 @@ import sys
 import simplejson
 import cStringIO
 import Image
+import zipfile
 # Create your views here.
 
 def home(request):
@@ -37,9 +38,15 @@ def trainModel(request):
 	if request.is_ajax():
 		print "SUCCESS AJAX CALL"
 		category = request.GET.get('category',None)
-		category= category.split()
-		category='+'.join(category)
-		fetchFromGoogle(category,jobId)
+		print "THE CATEGORY IS ",category
+		if "http" in category:
+			print "INSIDE IF CONDITION"
+			path = "/home/dypy/Pictures/cloudcv/"+createSession(request)+"/train/"
+			dropboxUrlFetch(category,path)
+		else:
+			category= category.split()
+			category='+'.join(category)
+			fetchFromGoogle(category,jobId)
 	return render_to_response('train.html',{'user':request.user},context_instance=RequestContext(request))
 
 def testaclass(request):
@@ -79,10 +86,13 @@ def fetchFromGoogle(searchTerm,jobId):
 		for img in deserialized_output['responseData']['results']:
 			try:
 				if img['unescapedUrl'][-3:]!="gif":
-					file = cStringIO.StringIO(urllib2.urlopen(img['unescapedUrl']).read())
-					img = Image.open(file)
+					filename = cStringIO.StringIO(urllib2.urlopen(img['unescapedUrl']).read())
+					imgg = Image.open(filename)
 					urls = len([i for i in os.listdir(directory+"/train/"+searchTerm) if image_type in i]) + 1
-					img.save(directory+"/train/"+searchTerm+"/image"+str(urls)+".jpg", format="JPEG")
+					if img['unescapedUrl'][-3:]=='png':
+						imgg.save(directory+"/train/"+searchTerm+"/image"+str(urls)+".png", format="PNG")
+					elif img['unescapedUrl'][-3:]=='jpg' or img['unescapedUrl'][-3:]=='jepg':
+						imgg.save(directory+"/train/"+searchTerm+"/image"+str(urls)+".jpg", format="JPEG")
 					if urls==20:
 						flag=1
 						break
@@ -115,3 +125,11 @@ def deleteImage(request):
 		# sessionId = request.session._session_key
 		os.remove('/home/dypy/Pictures/cloudcv/'+jobId+'/test/'+imgname)
 	return render_to_response('train.html') 
+
+def dropboxUrlFetch(url,path):
+	print "UNZIPPING START"
+	zippedfile = cStringIO.StringIO(urllib2.urlopen(url).read())
+	print "SUCCESSFULLY READ THE URL FOR UNZIPPING"
+	with zipfile.ZipFile(zippedfile, "r") as z:
+		print "UNZIPPING IN PROGRESS"
+		z.extractall(path)

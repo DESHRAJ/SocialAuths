@@ -42,30 +42,30 @@
     </nav>
 
     <div class="container">
-      <div class="jumbotron">
-        <h2><b>Train a Model</b></h2>
+      <div class="jumbotron" style="padding: 15px 15px; margin-left:10px;">
+        <h2 ><b>Train a Model</b></h2>
         <h3 style="font-size:16px;">How it works?</h3>
         <ol>
           <li>Enter the category you want to train. </li>
-          <li>We will fetch 20 images of that category from Google and will train our model using those images.</li>
+          <li>We will fetch top 20 images of that category from Google and will train our model using those images.</li>
           <li>Then, upload any image of that category and using our Classifier at the backend we will show the result of the test.</li>
         </ol>
         <div class="form-horizontal" >
             <div class="form-group">
-            <!-- <div class="row"> -->
-              <label class="col-md-6 control-label" for="category">Enter the Category</label>  
-              <div class="col-md-6">
-                <input   id="category" name="category" type="text" placeholder="Category Name" class="form-control input-md" required="" onchange="setText();">
-              <span class="help-block">Example: Cat</span>  
-              </div>
-              <div class="col-md-4">
-                <button id="submit" class="btn btn-primary" onclick="fetchImages(); this.disabled=True;">Train the Class </button>
+              <div class="col-md-5">
+                <label  for="category">Enter the name of Category or Dropbox Url</label>  
+                <input   id="category" name="category" type="text" placeholder="Category Name or Dropbox URL" class="form-control input-md" required="">
+                <!-- <span class="help-block">Example: Cat</span>   -->
+                <div >
+                <p></p>
+                  <button id="submit" class="btn btn-primary" onclick="fetchImages(); this.disabled=True;">Train the Class </button>
+                </div>
               </div>
             </div>
         </div>
       </div>  
       <div   class="container" style="margin-left:auto;">
-        <div class="jumbotron">
+        <div class="jumbotron" style="padding: 15px 15px; margin-left:10px;" >
           <h2><b>Test the Model</b></h2>
             <div id="dropzone">
               <form action="/testaclass" class="dropzone" id="demo-upload" enctype="multipart/form-data" method="post">
