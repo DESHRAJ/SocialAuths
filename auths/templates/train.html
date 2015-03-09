@@ -52,32 +52,38 @@
         </ol>
         <div class="form-horizontal" >
             <div class="form-group">
+            <!-- <div class="row"> -->
               <label class="col-md-6 control-label" for="category">Enter the Category</label>  
               <div class="col-md-6">
+                <input   id="category" name="category" type="text" placeholder="Category Name" class="form-control input-md" required="" onchange="setText();">
               <span class="help-block">Example: Cat</span>  
-              <input id="category" name="category" type="text" placeholder="Category Name" class="form-control input-md" required="" onchange="setText();">
+              </div>
+              <div class="col-md-4">
+                <button id="submit" class="btn btn-primary" onclick="fetchImages(); this.disabled=True;">Train the Class </button>
               </div>
             </div>
-            <div class="form-group">
-              <label class="col-md-6 control-label" for="submit"></label>
-              <div class="col-md-6">
-                <button id="submit" class="btn btn-primary" onclick="fetchImages(); this.disabled=True;">Submit</button>
-              </div>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-md-6 control-label" for="trainaclass"></label>
-            <div class="col-md-6">
-              <button id="trainaclass" name="trainaclass" class="btn btn-info btn-md  ">Train the Class: Cat</button>
-            </div>
-          </div>
-        </p>
-      </div>
-      <div class="container">
+        </div>
+      </div>  
+      <div   class="container" style="margin-left:auto;">
         <div class="jumbotron">
-          <h2>Test the Model</h2>
-          <!-- <form class="dropzone" action=""></form> -->
-          <form action="/testaclass" class="dropzone"></form>
+          <h2><b>Test the Model</b></h2>
+            <div id="dropzone">
+              <form action="/testaclass" class="dropzone" id="demo-upload" enctype="multipart/form-data" method="post">
+                {% csrf_token %}
+                <div class="dz-message">
+                  Drop files here or click to upload.<br />
+                </div>
+            </form>
+            <form >
+                <p style="text-align:center;">OR</p>
+                <div class="form-group">
+                    <input id="testimageB" name="testimageB" type="text" placeholder="Enter the Dropbox url of Zipped File" class="form-control input-md" >
+                </div>
+            </form>
+          </div>
+                <div class="col-md-4">
+                      <button id="testsubmit" class="btn btn-primary">Test the Class </button>
+                </div>
         </div>
       </div>
     </div>
@@ -100,8 +106,28 @@
             .done(function(data) {
                       console.log(data);
             });
-    }
-    </script>
+  };
+</script>
+<script type="text/javascript">
+$('#testsubmit').on('click', function(e) {
+    var serData = $('#demo-upload').serialize();
+    alert(serData);
+    uploadPromise = $.ajax({
+        url: '/testaclass',  
+        dataType: 'html',
+        type: 'get',
+        data: serData,
+        success: function() {
+            alert('It worked.');
+        },
+        failure: function(xhr, res, err) {
+            alert(xhr);
+            alert(res);
+            alert(err);
+        }
+    });
+});
+</script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
   </body>
 </html>

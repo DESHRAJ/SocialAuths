@@ -120,7 +120,7 @@
       parallelUploads: 2,
       uploadMultiple: false,
       maxFilesize: 256,
-      paramName: "file",
+      paramName: "testimageA",
       createImageThumbnails: true,
       maxThumbnailFilesize: 10,
       thumbnailWidth: 120,
@@ -135,7 +135,7 @@
       acceptedMimeTypes: null,
       autoProcessQueue: true,
       autoQueue: true,
-      addRemoveLinks: false,
+      addRemoveLinks: true,
       previewsContainer: null,
       capture: null,
       dictDefaultMessage: "Drop files here to upload",
@@ -301,7 +301,15 @@
             _ref.parentNode.removeChild(file.previewElement);
           }
         }
-        return this._updateMaxFilesReachedClass();
+        var name = file.name;        
+        $.ajax({
+          type: 'POST',
+          url: '/deleteimage',
+          data: {'name':name},
+          dataType: 'html'
+        });
+      // var _ref;
+      return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;  
       },
       thumbnail: function(file, dataUrl) {
         var thumbnailElement, _i, _len, _ref;

@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from bs4 import BeautifulSoup
 from lxml import etree
 from urllib import FancyURLopener
+from django.views.decorators.csrf import csrf_exempt
 import urllib2
 import requests
 import re
@@ -29,13 +30,6 @@ def dashboard(request):
 def trainModel(request):
 	''' View for training the model after fetching the results from google/flickr etc'''
 	if not request.user.is_authenticated():
-		# if "userId" not in request.session:
-		# 	if not request.session.exists(request.session.session_key):
-		# 		request.session.create()
-		# 		print "NEW SESSION IS CREATED"
-		# 	request.session['userId']=request.session._session_key
-		# print "THE SESSION HAS BEEN CREATED WITH VALUE",request.session['userId'] 
-		# jobId = request.session['userId']
 		jobId = createSession(request)
 	else:
 		jobId = request.session._session_key
@@ -47,6 +41,21 @@ def trainModel(request):
 		category='+'.join(category)
 		fetchFromGoogle(category,jobId)
 	return render_to_response('train.html',{'user':request.user},context_instance=RequestContext(request))
+
+def testaclass(request):
+	''' View for testing the class '''
+	if request.is_ajax():
+		if request.POST:
+			jobId = request.session._session_key
+			img = request.FILES['testimageA']
+			destination = open('/home/dypy/Pictures/cloudcv/'+jobId+'/test/'+img.name, 'wb+')
+			for chunk in img.chunks():
+				destination.write(chunk)
+			destination.close()
+			print "HEY I GOT THE FILE NAMED", img
+			# except:
+			# 	print "ERROR IN CREATING IMAGE" 
+	return render_to_response('train.html',context_instance = RequestContext(request))
 
 def fetchFromGoogle(searchTerm,jobId):
 	''' Function for fetching top 24 Google Images using the google apis'''
@@ -85,6 +94,7 @@ def fetchFromGoogle(searchTerm,jobId):
 		icount+=8
 
 def createSession(request):
+	''' view for creating the session for the new users '''
 	if "userId" not in request.session:
 		if not request.session.exists(request.session.session_key):
 			request.session.create()
@@ -93,3 +103,15 @@ def createSession(request):
 	print "THE SESSION HAS BEEN CREATED WITH VALUE",request.session['userId'] 
 	jobId = request.session['userId']
 	return jobId
+
+@csrf_exempt
+def deleteImage(request):
+	''' view for deleting the images from the /jobid/test/ folder'''
+	print "YEAH I AM INSIDE DELETE"
+	jobId = request.session._session_key
+	if request.is_ajax():
+		if request.POST:
+			imgname = request.POST['name']
+		# sessionId = request.session._session_key
+		os.remove('/home/dypy/Pictures/cloudcv/'+jobId+'/test/'+imgname)
+	return render_to_response('train.html') 
