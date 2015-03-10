@@ -3,8 +3,8 @@ from django.http import *
 from django.shortcuts import render_to_response
 from django.template import Context,RequestContext
 from django.contrib.auth.decorators import login_required
-from bs4 import BeautifulSoup
-from lxml import etree
+# from bs4 import BeautifulSoup
+# from lxml import etree
 from urllib import FancyURLopener
 from django.views.decorators.csrf import csrf_exempt
 import urllib2
