@@ -57,7 +57,8 @@
                 <!-- <span class="help-block">Example: Cat</span>   -->
                 <div >
                 <p></p>
-                  <button id="submit" class="btn btn-primary" onclick="fetchImages(); this.disabled=True;">Train the Class </button>
+                  <button id="submit" class="btn btn-primary" onclick="fetchImages();">Train the Class </button>
+                  <div class="showNotification"></div>
                 </div>
               </div>
             </div>
@@ -105,8 +106,13 @@
             error: function() {alert("error");},
           })  
             .done(function(data) {
-                      console.log(data);
-            });
+                      // bootstrap_alert1 = function() {}
+                      // bootstrap_alert1.warning = function(message) {
+                          $('.showNotification').html('<div class="row"><div class="col-sm-6"><div class="alert alert-success "><a class="close" data-dismiss="alert">×</a><span>The Images are successfuly uploaded and models are trained.</span></div></div></div>');
+                      // }
+                      // bootstrap_alert1.warning('The Images are successfuly uploaded and models are trained.');
+                      });
+            // });
   };
       bootstrap_alert = function() {}
       bootstrap_alert.warning = function(message) {
@@ -121,6 +127,7 @@
             bootstrap_alert.warning('You can either use uploaded images or use dropbox url');
         }
       });
+
 </script>​
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
   </body>

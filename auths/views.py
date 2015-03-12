@@ -20,16 +20,19 @@ import zipfile
 
 def home(request):
 	''' View for the home page of the application'''
+	
 	if request.user.is_authenticated():
 		return HttpResponseRedirect('/dashboard')
 	return render_to_response('index.html')
 
 def dashboard(request):
 	''' View of Dashboard page for user after logging in using the Social Account '''
+	
 	return render_to_response('dashboard.html',{'user':request.user},context_instance = RequestContext(request))
 
 def trainModel(request):
 	''' View for training the model after fetching the results from google/flickr etc'''
+	
 	if not request.user.is_authenticated():
 		jobId = createSession(request)
 	else:
@@ -41,6 +44,7 @@ def trainModel(request):
 		print "THE CATEGORY IS ",category
 		if "http" in category:
 			print "INSIDE IF CONDITION"
+			category = category[:-1]+"1"
 			path = "/home/dypy/Pictures/cloudcv/"+createSession(request)+"/train/"
 			dropboxUrlFetch(category,path)
 		else:
@@ -51,6 +55,7 @@ def trainModel(request):
 
 def testaclass(request):
 	''' View for testing the class '''
+	
 	if request.is_ajax():
 		if request.POST:
 			jobId = request.session._session_key
@@ -66,11 +71,12 @@ def testaclass(request):
 
 def fetchFromGoogle(searchTerm,jobId):
 	''' Function for fetching top 24 Google Images using the google apis'''
+
 	directory = "/home/dypy/Pictures/cloudcv/"+jobId
 	print "DIRETORY CREATION STARTS"
 	if not os.path.exists(directory):
 		os.makedirs(directory+"/test")
-		os.makedirs(directory+"/utils")
+		os.makedirs(directory+"/util")
 	if not os.path.exists(directory+"/train/"+searchTerm):
 		os.makedirs(directory+"/train/"+searchTerm)
 		print "DIRECTORY CREATION SUCCESSFUL"
@@ -131,5 +137,5 @@ def dropboxUrlFetch(url,path):
 	zippedfile = cStringIO.StringIO(urllib2.urlopen(url).read())
 	print "SUCCESSFULLY READ THE URL FOR UNZIPPING"
 	with zipfile.ZipFile(zippedfile, "r") as z:
-		print "UNZIPPING IN PROGRESS"
 		z.extractall(path)
+		print "UNZIPPING DONE"
