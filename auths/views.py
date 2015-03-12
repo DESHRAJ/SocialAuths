@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 # from lxml import etree
 from urllib import FancyURLopener
 from django.views.decorators.csrf import csrf_exempt
+from PIL import Image
 import urllib2
 import requests
 import re
@@ -14,7 +15,6 @@ import os
 import sys
 import simplejson
 import cStringIO
-import Image
 import zipfile
 # Create your views here.
 
