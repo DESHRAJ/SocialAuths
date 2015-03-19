@@ -45,7 +45,7 @@ def trainModel(request):
 		if "http" in category:
 			print "INSIDE IF CONDITION"
 			category = category[:-1]+"1"
-			path = "/home/dypy/Pictures/cloudcv/"+createSession(request)+"/train/"
+			path = "/home/dypy/Pictures/cloudcv/"+jobId+"/train/"
 			dropboxUrlFetch(category,path)
 		else:
 			category= category.split()
@@ -71,10 +71,11 @@ def testaclass(request):
 
 def fetchFromGoogle(searchTerm,jobId):
 	''' Function for fetching top 24 Google Images using the google apis'''
-
+	
 	directory = "/home/dypy/Pictures/cloudcv/"+jobId
 	print "DIRETORY CREATION STARTS"
 	if not os.path.exists(directory):
+		os.makedirs(directory)
 		os.makedirs(directory+"/test")
 		os.makedirs(directory+"/util")
 	if not os.path.exists(directory+"/train/"+searchTerm):
@@ -139,3 +140,6 @@ def dropboxUrlFetch(url,path):
 	with zipfile.ZipFile(zippedfile, "r") as z:
 		z.extractall(path)
 		print "UNZIPPING DONE"
+
+def material(request):
+	return render_to_response("muitrain.html")

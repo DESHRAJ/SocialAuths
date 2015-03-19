@@ -1,0 +1,139 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+  <title>CloudCV Home</title>
+  <link href="/static/material/css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="/static/material/css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="/static/material/css/ghpages-materialize.css" type="text/css" rel="stylesheet" media="screen,projection">
+</head>
+<body>
+   <header>
+      <nav class="top-nav">
+        <div class="container">
+          <div class="col s12 m9">
+            <h1 class="header white-text center-on-small-only">Train & Test a Category</h1>
+          </div>
+          </div>
+        </div>
+        </div>
+      </nav>
+      <div class="container"><a href="#" data-activates="nav-mobile" class="button-collapse top-nav full"><i class="mdi-navigation-menu"></i></a></div>
+      <ul id="nav-mobile" class="side-nav fixed">
+        <li class="logo"><a id="logo-container" href="#" class="brand-logo">
+            <object id="front-page-logo" type="image/svg+xml" data="/static/material/materialize.svg">Your browser does not support SVG</object></a></li>
+        <li class="bold"><a class="waves-effect active waves-teal" href="#">Home</a></li>
+        <li class="bold"><a class="waves-effect waves-teal" href="#">Classifier</a></li>
+        <li class="no-padding">
+          <ul class="collapsible collapsible-accordion">
+            <li class="bold"><a class="collapsible-header  waves-effect waves-teal">Train and Test</a>
+              <div class="collapsible-body">
+                <ul>
+                  <li><a class="waves-effect waves-teal" >Train a Category</a></li>
+                  <li><a class="waves-effect waves-teal" >Test a Class</a></li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </li>
+        <li class="bold"><a class="waves-effect waves-teal">Image Stitch</a></li>
+        <li class="bold"><a href="#" class="waves-effect waves-teal">Decaf Server</a></li>
+        <li class="bold"><a href="#" class="waves-effect waves-teal">Object Detection</a></li>
+      </ul>
+    </header>
+      <main><div class="container">
+  <div class="row">
+
+    <div class="col s12 m9 l10">
+
+
+      <div>
+        <div id="grid-container" class="section scrollspy">
+          <h3 class="header">Upload Images to Train a Category</h3>
+          <p>Instructions:<br/>
+          <ol class="grey-text darken-3">
+            <li>Type the new category label, and press the Add Label button.</li>
+            <li>Upload images for this label by pressing the label_name: Add Images button.</li>
+<li>Repeat steps (1) and (2) in sequence to add more categories if needed.</li>
+<li>You can train the new model by clicking "Train a model" button.</li>
+<li>Finally upload the test images by creating a label: test. Press Test the new model to see the predictions of your new classifier</li>
+<li>For good performance, you should upload at least 5 to 10 images for each label. For a large number of images, we recommend using the CloudCV Python and MATLAB APIs.</li>
+          </ol>
+          <label  for="category" style="color:#55555;">Enter the name of Category or Dropbox Url</label>  
+          <input   id="category" name="category" type="text" placeholder="Category Name or Dropbox URL" class="form-control input-md" required="">
+          <a class="waves-effect waves-light btn" id="submit" onclick="fetchImages();"><i class="mdi-file-cloud right"></i>Start Training</a>
+                  <div class="row"><div class="showNotification">
+    </div>
+  <script type="text/javascript">
+    function fetchImages() {
+      var category = document.getElementById('category').value;
+      $.ajax({
+            url     : '/trainclass', // the url where we want to POST
+            data    : {'category':category},
+            type: 'GET',
+            success: function() {   },
+            error: function() {alert("error");},
+          })  
+            .done(function(data) {
+                      bootstrap_alert1 = function() {}
+                      bootstrap_alert1.warning = function(message) {
+                          $('.showNotification').html('<div class="row"><div class="col-sm-6"><div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><span>'+message+'</span></div></div></div>');
+                      }
+                      bootstrap_alert1.warning('The Images are successfuly uploaded and models are trained.');
+                      });
+                  };
+      bootstrap_alert = function() {}
+      bootstrap_alert.warning = function(message) {
+          $('.rowss').html('<div class="row"><div class="col-sm-6"><div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><span>'+message+'</span></div></div></div>')
+      }
+      $('#testsubmit').on('click', function() {
+        var trainModel = $("#category").val().length;
+        if(trainModel == 0){
+          $('.rowss').html('<div class="row"><div class="col-sm-6"><div class="alert alert-warning"><a class="close" data-dismiss="alert">×</a><span>First Train the Model then test it.</span></div></div></div>')
+        }
+        else{ 
+          var len2 = $('#testimageB').val().length;
+          var len1 = $(".dz-size").html();
+          if (len1 != null && len2 ){
+              bootstrap_alert.warning('You can either use uploaded images or use dropbox url');
+        }
+      }
+    });
+</script>​
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="/static/material/js/materialize.js"></script>
+  <script src="/static/material/js/init.js"></script>
+   <div class="preloader-wrapper big active">
+      <div class="spinner-layer spinner-blue" id="loader1">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div><div class="gap-patch">
+          <div class="circle"></div>
+        </div><div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+  </body>
+  <script type="text/javascript">
+    function load(url) {
+    // display loading image here...
+    document.getElementById('loader1').visible = true;
+    // request your data...
+    var req = new XMLHttpRequest();
+    req.open("POST", url, true);
+
+    req.onreadystatechange = function () {
+        if (req.readyState == 4 && req.status == 200) {
+            // content is loaded...hide the gif and display the content...
+            if (req.responseText) {
+                document.getElementById('content').innerHTML = req.responseText;
+                document.getElementById('loader1').visible = false;
+            }
+        }
+    };
+    request.send(vars);
+}
+  </script>
+</html>

@@ -308,9 +308,7 @@
           data: {'name':name},
           dataType: 'html'
         });
-      // var _ref;
       return this._updateMaxFilesReachedClass();
-      // return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;  
       },
       thumbnail: function(file, dataUrl) {
         var thumbnailElement, _i, _len, _ref;
