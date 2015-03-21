@@ -27,8 +27,7 @@ def home(request):
 
 def dashboard(request):
 	''' View of Dashboard page for user after logging in using the Social Account '''
-	
-	return render_to_response('dashboard.html',{'user':request.user},context_instance = RequestContext(request))
+	return render_to_response('mdashboard.html',{'user':request.user},context_instance = RequestContext(request))
 
 def trainModel(request):
 	''' View for training the model after fetching the results from google/flickr etc'''
@@ -142,4 +141,7 @@ def dropboxUrlFetch(url,path):
 		print "UNZIPPING DONE"
 
 def material(request):
-	return render_to_response("muitrain.html")
+	return render_to_response("muitrain.html",context_instance=RequestContext(request))
+
+def temp(request):
+	return render_to_response("template.html")
