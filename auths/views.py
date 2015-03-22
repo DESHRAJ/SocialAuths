@@ -20,10 +20,9 @@ import zipfile
 
 def home(request):
 	''' View for the home page of the application'''
-	
 	if request.user.is_authenticated():
 		return HttpResponseRedirect('/dashboard')
-	return render_to_response('index.html')
+	return render_to_response('material.html')
 
 def dashboard(request):
 	''' View of Dashboard page for user after logging in using the Social Account '''
@@ -50,7 +49,7 @@ def trainModel(request):
 			category= category.split()
 			category='+'.join(category)
 			fetchFromGoogle(category,jobId)
-	return render_to_response('train.html',{'user':request.user},context_instance=RequestContext(request))
+	return render_to_response('muitrain.html',{'user':request.user},context_instance=RequestContext(request))
 
 def testaclass(request):
 	''' View for testing the class '''
@@ -66,7 +65,7 @@ def testaclass(request):
 			print "HEY I GOT THE FILE NAMED", img
 			# except:
 			# 	print "ERROR IN CREATING IMAGE" 
-	return render_to_response('train.html',context_instance = RequestContext(request))
+	return render_to_response('muitrain.html',context_instance = RequestContext(request))
 
 def fetchFromGoogle(searchTerm,jobId):
 	''' Function for fetching top 24 Google Images using the google apis'''
@@ -130,7 +129,7 @@ def deleteImage(request):
 			imgname = request.POST['name']
 		# sessionId = request.session._session_key
 		os.remove('/home/dypy/Pictures/cloudcv/'+jobId+'/test/'+imgname)
-	return render_to_response('train.html') 
+	return render_to_response('muitrain.html') 
 
 def dropboxUrlFetch(url,path):
 	print "UNZIPPING START"
@@ -141,7 +140,7 @@ def dropboxUrlFetch(url,path):
 		print "UNZIPPING DONE"
 
 def material(request):
-	return render_to_response("muitrain.html",context_instance=RequestContext(request))
+	return render_to_response("material.html",context_instance=RequestContext(request))
 
 def temp(request):
-	return render_to_response("template.html")
+	return render_to_response("muitrain.html")

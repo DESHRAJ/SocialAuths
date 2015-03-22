@@ -8046,6 +8046,7 @@ nav.top-nav {
   box-shadow: none; }
   nav.top-nav a.page-title {
     line-height: 122px;
+    font-weight: 200;
     font-size: 48px; }
 
 a.button-collapse.top-nav {
