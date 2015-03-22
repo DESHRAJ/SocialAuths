@@ -5,36 +5,37 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
   <title>CloudCV Home</title>
-  <link href="/static/material/css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <!-- <link href="/static/material/css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"/> -->
   <link href="/static/material/css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
   <link href="/static/material/css/ghpages-materialize.css" type="text/css" rel="stylesheet" media="screen,projection">
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
   <script src="/static/js/dropzone.js"></script>
   <link rel="stylesheet" href="/static/css/dropzone.css">
 </head>
 <body>
    <header>
-      <nav class="top-nav">
-        <div class="container">
+      <nav class="top-nav" id="tr">
+        <div class="container" >
           <div class="col s12 m9">
-            <h1 class="header white-text center-on-small-only">Train a Category</h1>
+            <h1 class="header white-text center-on-small-only" >Train Category</h1>
           </div>
           </div>
         </div>
         </div>
       </nav>
-      <div class="container"><a href="#" data-activates="nav-mobile" class="button-collapse top-nav full"><i class="mdi-navigation-menu"></i></a></div>
+      <div class="container"><a href="#" data-activates="nav-mobile" class="button-collapse top-nav full"><i class="mdi-navigation-menu" style="margin-left:-25px;"></i></a></div>
       <ul id="nav-mobile" class="side-nav fixed">
         <li class="logo"><a id="logo-container" href="#" class="brand-logo">
             <object id="front-page-logo" type="image/png" data="/static/material/cloud.png">Your browser does not support SVG</object></a></li>
         <li class="bold"><a class="waves-effect active waves-teal" href="#">Home</a></li>
         <li class="bold"><a class="waves-effect waves-teal" href="#">Classifier</a></li>
         <li class="no-padding">
-          <ul class="collapsible collapsible-accordion">
+          <ul class="collapsible collapsible-accordion" id="nav1">
             <li class="bold"><a class="collapsible-header  waves-effect waves-teal">Train and Test</a>
               <div class="collapsible-body">
                 <ul>
-                  <li><a class="waves-effect waves-teal" >Train a Category</a></li>
-                  <li><a class="waves-effect waves-teal" >Test a Category</a></li>
+                  <li><a class="waves-effect waves-teal" href="#tr">Train a Category</a></li>
+                  <li><a class="waves-effect waves-teal" href="#here">Test a Category</a></li>
                 </ul>
               </div>
             </li>
@@ -60,23 +61,34 @@
             <li>Finally upload the test images by creating a label: test. Press Test the new model to see the predictions of your new classifier</li>
             <li>For good performance, you should upload at least 5 to 10 images for each label. For a large number of images, we recommend using the CloudCV Python and MATLAB APIs.</li>
           </ol>
-          <label for="category" style="color:#55555;">Enter the name of Category or Dropbox Url</label>  
-          <input id="category" name="category" type="text" placeholder="Category Name or Dropbox URL" class="form-control input-md" required="">
-          <a class="waves-effect waves-light btn" id="submit" onclick="fetchImages();"><i class="mdi-file-cloud right"></i>Start Training</a></div></div></div>
-      <div class="row"><div class="showNotification">
+          <div class="row">
+            <div class="col s12">
+              <div class="row">
+                <div class="input-field col s12">
+                  <input id="category" name="category" type="text" required="True">
+                  <label for="category">Category Name or Dropbox Url</label>
+                </div>
+          <a class="waves-effect waves-light btn" id="submit" onclick="fetchImages();"><i class="mdi-maps-directions-train left"></i>Start Training</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    </div>
-    </div>
-    <div class="row" style="background-color: #00BCD4; margin-top:10px;">
+  </div>
+    <div class="row light-blue darken-4" style="margin-top:10px;" id="here">
           <div class="col s12 m9">
-            <h1 class="header white-text center-on-small-only">&nbsp;&nbsp;&nbsp;&nbsp; Test a Category</h1>
+            <h1 class="header white-text center-on-small-only" id="test">Test a Category</h1>
           </div>
     </div>
             <style type="text/css">
+            #test{
+              padding-left:11%;
+            }
             #heading1{
               margin-top:10px; 
               height: 122px;
-              background-color: #00BCD4;
+              background-color: #01579b;
               font-weight: 300;
               font-size: 4.2rem;
               line-height: 4.62rem;
@@ -100,48 +112,29 @@
             <div id="dropzone">
               <form action="/testaclass" class="dropzone" id="demo-upload" enctype="multipart/form-data" method="post">
                 {% csrf_token %}
-                <div class="dz-message">
+                <div class="dz-message" style="color:#01579b;">
                   Drop files here or click to upload.<br />
                 </div>
             </form>
              <div class="row">
                 <h6 class="grey-text center">OR</h6>
                 </div>
-                <div class="form-group">
-                    <input id="testimageB" name="testimageB" type="text" placeholder="Enter the Dropbox url of Zipped File" class="form-control input-md" >
-                </div>
-                <div class="form-group">
-                  <div class="row"> 
-                    <div class="col-md-4">
-                          <button id="testsubmit" class="btn btn-primary">Test the Class </button>
-                    </div>
+                <div class="row">
+                  <div class="input-field col s12">
+                    <input id="testimageB" name="testimageB" type="text" >
+                    <label for="category">Dropbox Url od Zipped File Url</label>
                   </div>
+                  <div class="col s6 m4"></div>
+                    <a class="waves-effect waves-light btn" id="testsubmit"><i class="mdi-editor-format-size
+ left"></i>Test the Class</a>
+
                 </div>
+    </div>
+    </div>
     </div>
     </div>
     </div>
     </main>
-  </body>
-  <script type="text/javascript">
-    function load(url) {
-    // display loading image here...
-    document.getElementById('loader1').visible = true;
-    // request your data...
-    var req = new XMLHttpRequest();
-    req.open("POST", url, true);
-
-    req.onreadystatechange = function () {
-        if (req.readyState == 4 && req.status == 200) {
-            // content is loaded...hide the gif and display the content...
-            if (req.responseText) {
-                document.getElementById('content').innerHTML = req.responseText;
-                document.getElementById('loader1').visible = false;
-            }
-        }
-    };
-    request.send(vars);
-}
-  </script>
   <script type="text/javascript">
     function fetchImages() {
       var category = document.getElementById('category').value;
@@ -153,32 +146,48 @@
             error: function() {alert("error");},
           })  
             .done(function(data) {
-                      bootstrap_alert1 = function() {}
-                      bootstrap_alert1.warning = function(message) {
-                          $('.showNotification').html('<div class="row"><div class="col-sm-6"><div class="alert alert-success"><a class="close" data-dismiss="alert">×</a><span>'+message+'</span></div></div></div>');
-                      }
-                      bootstrap_alert1.warning('The Images are successfuly uploaded and models are trained.');
+                       toast('Images are successfuly uploaded and model is trained. :)', 4000);
                       });
                   };
-      bootstrap_alert = function() {}
-      bootstrap_alert.warning = function(message) {
-          $('.rowss').html('<div class="row"><div class="col-sm-6"><div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a><span>'+message+'</span></div></div></div>')
-      }
       $('#testsubmit').on('click', function() {
         var trainModel = $("#category").val().length;
         if(trainModel == 0){
-          $('.rowss').html('<div class="row"><div class="col-sm-6"><div class="alert alert-warning"><a class="close" data-dismiss="alert">×</a><span>First Train the Model then test it.</span></div></div></div>')
+           toast('First Train the Model and then test it.', 4000);
         }
         else{ 
           var len2 = $('#testimageB').val().length;
           var len1 = $(".dz-size").html();
           if (len1 != null && len2 ){
-              bootstrap_alert.warning('You can either use uploaded images or use dropbox url');
+           toast('You can either use uploaded images or use dropbox url', 4000);
         }
       }
     });
 </script>​
-  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <footer class="page-footer no-margin no-padding">
+      <div class="container">
+        <div class="row">
+          <div class="col l6 s12">
+            <h5 class="white-text">Images on Cloud</h5>
+            <p class="grey-text text-lighten-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          </div>
+          <div class="col l4 offset-l2 s12">
+            <h5 class="white-text">Links</h5>
+            <ul>
+              <li><a class="grey-text text-lighten-3" href="#!">About us</a></li>
+              <li><a class="grey-text text-lighten-3" href="#!">Our Team</a></li>
+              <li><a class="grey-text text-lighten-3" href="#!">Contact us</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-copyright">
+        <div class="container">
+        © 2015 Copyright CloudCV
+        <a class="grey-text text-lighten-4 right" href="#!">CloudCV Home Page</a>
+        </div>
+      </div>
+    </footer>
+  </body>
   <script src="/static/material/js/materialize.js"></script>
   <script src="/static/material/js/init.js"></script>
 </html>
