@@ -20,13 +20,13 @@ import zipfile
 
 def home(request):
 	''' View for the home page of the application'''
-	if request.user.is_authenticated():
-		return HttpResponseRedirect('/dashboard')
+	# if request.user.is_authenticated():
+		# return HttpResponseRedirect('/dashboard')
 	return render_to_response('material.html')
 
 def dashboard(request):
 	''' View of Dashboard page for user after logging in using the Social Account '''
-	return render_to_response('mdashboard.html',{'user':request.user},context_instance = RequestContext(request))
+	return render_to_response('muitrain.html',{'user':request.user},context_instance = RequestContext(request))
 
 def trainModel(request):
 	''' View for training the model after fetching the results from google/flickr etc'''
@@ -51,20 +51,31 @@ def trainModel(request):
 			fetchFromGoogle(category,jobId)
 	return render_to_response('muitrain.html',{'user':request.user},context_instance=RequestContext(request))
 
+@csrf_exempt
 def testaclass(request):
 	''' View for testing the class '''
-	
 	if request.is_ajax():
+		print 0
 		if request.POST:
 			jobId = request.session._session_key
+			print jobId
 			img = request.FILES['testimageA']
+			print 1
 			destination = open('/home/dypy/Pictures/cloudcv/'+jobId+'/test/'+img.name, 'wb+')
+			print 2
 			for chunk in img.chunks():
+				print 3
 				destination.write(chunk)
 			destination.close()
 			print "HEY I GOT THE FILE NAMED", img
-			# except:
-			# 	print "ERROR IN CREATING IMAGE" 
+		if request.GET:
+			value = request.GET.get('value',None)
+			if "http" in value:
+				jobId = request.session._session_key
+				print "INSIDE IF CONDITION"
+				value = value[:-1]+"1"
+				path = "/home/dypy/Pictures/cloudcv/"+jobId+"/test/"
+				dropboxUrlFetch(value,path)
 	return render_to_response('muitrain.html',context_instance = RequestContext(request))
 
 def fetchFromGoogle(searchTerm,jobId):
@@ -143,4 +154,7 @@ def material(request):
 	return render_to_response("material.html",context_instance=RequestContext(request))
 
 def temp(request):
-	return render_to_response("muitrain.html")
+	return render_to_response("mdashboard.html")
+
+def temp1(request):
+	return render_to_response("testing.html")

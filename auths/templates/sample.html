@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>CloudCV Dashboards</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.95.3/css/materialize.min.css">
+	<link rel="stylesheet" href="/static/css/sample.css">
+	<link href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700,900" rel="stylesheet" type="text/css">
+	<link href="/static/c3/c3.min.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+		<ul id="dropdown1" class="dropdown-content">
+			<li><a href="#!">one</a></li>
+			<li><a href="#!">two</a></li>
+			<li class="divider"></li>
+			<li><a href="#!">three</a></li>
+		</ul>
+		<div class="navbar-fixed">
+		<nav >
+			<div class="nav-wrapper">
+				<a href="#!" class="center brand-logo"><i class="right mdi-file-cloud-queue"></i> CloudCV</a>
+				<a id="menuicon" data-activates="mobile-demo" class="button-collapse top-nav full"><i class="mdi-navigation-menu"></i></a>
+				<ul class="menu2 left hide-on-med-and-down">
+					<li>
+						<form>
+							<div class="input-field">
+								<input id="search" type="text" required>
+								<label for="search"><i class="mdi-action-search"></i></label>
+							</div>
+						</form>
+					</li>
+				</ul>
+				<ul class="menu2 right hide-on-med-and-down">
+					<li><a><img src="/static/temp/deshraj.jpg" id="deshraj" alt="deshraj" class="circle resposive-img">Hi, Deshraj</a></li>
+					<!-- <li><a>Hi, Deshraj</a></li> -->
+					<li><a><i class="mdi-action-home"></i></a></li>
+					<li><a><i class="mdi-action-event"></i></a></li>
+					<li><a><i class="mdi-action-delete"></i></a></li>
+					<li class="divider"></li>
+				</ul>
+			</div>
+				<ul class="side-nav show-on-med-and-down" id="mobile-demo">
+					<li><a><img src="/static/temp/deshraj.jpg" id="deshraj" alt="deshraj" class="circle resposive-img">   Hi, Deshraj</a></li>
+					<div class="divider"></div>
+					<li>
+						<form>
+							<div class="input-field">
+								<input id="search" type="text" placeholder="Search"required>
+								<label for="search"><i class="mdi-action-search"></i></label>
+							</div>
+						</form>
+					</li>
+					<li><a>Classification</a></li>
+					<li><a>Image Stitch</a></li>
+					<li><a>Train Category</a></li>
+					<li><a>Decaf Server</a></li>
+					<div class="divider"></div>
+					<li><a>Logout</a></li>
+					<div class="divider"></div>
+				</ul>
+	</nav>
+	</div>
+				<ul class="side-nav fixed hide-on-med-and-down">
+					<li class="bold active"><a class="waves-effect waves-teal"><i class="small mdi-action-home"></i> Dashboard</a></li>
+					<div class="divider"></div>
+					<li class="bold"><a class="waves-effect waves-teal"><i class="small mdi-action-accessibility"></i> Active Signals</a></li>
+					<div class="divider"></div>
+					<li class="bold"><a class="waves-effect waves-teal"><i class="small mdi-editor-insert-chart"></i> Visual Charts</a></li>
+					<div class="divider"></div>
+					<li class="bold"><a class="waves-effect waves-teal"><i class="small mdi-action-bug-report"></i> Classifiers</a></li>
+					<div class="divider"></div>
+					<li class="bold"><a class="waves-effect waves-teal"><i class="small mdi-image-camera-front"></i> Image System</a></li>
+					<div class="divider"></div>
+			</ul>
+	<main>
+		<div class="row" id="row1">
+			<div class="col s12 m12 l12">
+						 <a class="active waves-effect waves-light btn">OVERVIEW</a>
+						<a class="waves-effect waves-light btn">MY REPORTS</a>
+						<a class="waves-effect waves-light btn">FORUM</a>
+						<a class="waves-effect waves-light btn">SEARCH</a>
+						<a class="waves-effect waves-light btn">MY PROJECTS</a>
+						<a class="waves-effect waves-light btn">LEADERBOARD</a>												
+			</div>
+		</div>
+		<div class="divider" id="rowdivider"></div>
+		<div class="row">
+			<div class="col s12 m12 l6">
+				<div id="c3_1">
+						<div class="card">
+            <div class="card-content">
+							<div id="chart"></div>
+            </div>
+          </div>
+				</div>
+			</div>
+			<div class="col s12 m12 l6" id="graph">
+				<img src="/static/c3/graph.png" alt="graph">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col s12 m6 l4">
+			<div class="card blue-grey darken-1">
+            <div class="card-content white-text">
+              <span class="card-title">Card Title</span>
+              <p>I am a very simple card. I am good at containing small bits of information.
+              I am convenient because I require little markup.</p>
+            </div>
+          </div>
+			</div>
+			<div class="col s12 m6 l4">
+			<div class="card blue-grey darken-1">
+            <div class="card-content white-text">
+              <span class="card-title">Card Title</span>
+              <p>I am a very simple card. I am good at containing small bits of information.
+              I am convenient because I require little markup.</p>
+            </div>
+          </div>
+			</div>
+			<div class="col s12 m6 l4">
+			<div class="card blue-grey darken-1">
+            <div class="card-content white-text">
+              <span class="card-title">Card Title</span>
+              <p>I am a very simple card. I am good at containing small bits of information.
+              I am convenient because I require little markup.</p>
+            </div>
+          </div>
+			</div>
+		</div>
+	</main>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.95.3/js/materialize.min.js"></script>
+	<script src="/static/c3/d3.min.js" charset="utf-8"></script>
+	<script src="/static/c3/c3.min.js"></script>
+	<script type="text/javascript">
+		$(".dropdown-button").dropdown();
+		$('.button-collapse').sideNav();
+	</script>
+</body>
+	<script type="text/javascript">
+var chart = c3.generate({
+    data: {
+        columns: [
+            ['data1', 300, 350, 300, 0, 0, 0],
+            ['data2', 130, 100, 140, 200, 150, 50]
+        ],
+        types: {
+            data1: 'area',
+            data2: 'area-spline'
+        }
+    }
+});
+	</script>
+
+</html>

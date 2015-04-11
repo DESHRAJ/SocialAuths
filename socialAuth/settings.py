@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     # 'allauth.socialaccount.providers.dropbox_oauth2',
     'allauth.socialaccount.providers.github',
     'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.instagram',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

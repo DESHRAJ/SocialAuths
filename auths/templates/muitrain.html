@@ -5,13 +5,44 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
   <title>CloudCV Home</title>
-  <!-- <link href="/static/material/css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"/> -->
   <link href="/static/material/css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
   <link href="/static/material/css/ghpages-materialize.css" type="text/css" rel="stylesheet" media="screen,projection">
   <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
   <script src="/static/js/dropzone.js"></script>
   <link rel="stylesheet" href="/static/css/dropzone.css">
 </head>
+<style type="text/css">
+  #div1{
+    margin-bottom: -25px;
+  }
+  #div2{
+    margin-bottom: -25px;
+  }
+  #div3{
+    margin-bottom: -25px;
+  }
+  #login1{
+    background-color: #007EE5;
+  }
+  #login2{
+    background-color: #C33B2B;
+  }
+  #login3{
+    background-color: #323131;
+  }
+  .btn-large {
+    width:100%;
+  }
+/*  #login1:hover {
+    background-color: #007EE5;
+}
+  #login2:hover {
+    background-color: #C33B2B;
+}
+  #login3:hover {
+    background-color: #323131;
+}*/
+</style>
 <body>
    <header>
       <nav class="top-nav" id="tr">
@@ -27,7 +58,11 @@
       <ul id="nav-mobile" class="side-nav fixed">
         <li class="logo"><a id="logo-container" href="#" class="brand-logo">
             <object id="front-page-logo" type="image/png" data="/static/material/cloud.png">Your browser does not support SVG</object></a></li>
+            {% if user.is_authenticated %}
+        <li class="bold"><a class="waves-effect active waves-teal" href="/">Hi, {{ user.first_name }} {{ user.last_name }}</a></li>
+        {% else %}
         <li class="bold"><a class="waves-effect active waves-teal" href="/">Home</a></li>
+        {% endif %}
         <li class="bold"><a class="waves-effect waves-teal" href="#">Classifier</a></li>
         <li class="no-padding">
           <ul class="collapsible collapsible-accordion" id="nav1">
@@ -44,12 +79,17 @@
         <li class="bold"><a class="waves-effect waves-teal">Image Stitch</a></li>
         <li class="bold"><a href="#" class="waves-effect waves-teal">Decaf Server</a></li>
         <li class="bold"><a href="#" class="waves-effect waves-teal">Object Detection</a></li>
+        {% if user.is_authenticated %}
+        <div class="divider"></div>
+        <li class="bold"><a href="/logout" class="waves-effect waves-teal">Logout</a></li>
+        <div class="divider"></div>
+        {% endif %}
       </ul>
     </header>
       <main>
       <div class="container">
   <div class="row">
-    <div class="col s12 m9 l10">
+    <div class="col s12 m8 l9">
         <div id="grid-container" class="section scrollspy">
           <h3 class="header">Upload Images to Train a Category</h3>
           <p>Instructions:</p>
@@ -74,6 +114,38 @@
           </div>
         </div>
       </div>
+      {% if not user.is_authenticated %}
+    <div class="col center-on-small-only s12 m4 l3">
+    <div class="toc-wrapper">
+      <p>LOGIN USING:</p>
+    </div>
+    <div class="row">
+      <div class="col s12 m12" id="div1">
+          <a class="btn-large waves-effect waves-light" id="login2" href="/google/login/?process=login">GOOGLE<img src="/static/material/gd.png" style="  vertical-align: middle;
+  padding-left: 8px;"></a>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col s12 m12" id="div1">
+        <a class="btn-large waves-effect waves-light"  id="login1" href="/dropbox/login/?process=login">Dropbbox<img src="/static/material/dropbox.png" style="  vertical-align: middle;
+  padding-left: 8px;"></a>
+      </div>
+    </div>
+    <div class="row">
+      
+    <div class="col s12 m12" id="div1">
+        <a class="btn-large waves-effect waves-light" id="login3" href="/github/login/?process=login">GITHUB<img src="/static/material/github.png" style="  vertical-align: middle;
+  padding-left: 8px;"></a>
+      </div>
+    </div>
+    </div>
+      <div style="height: 1px;">
+        <ul class="section table-of-contents">
+          <li><a href="#tr">Train Model</a></li>
+          <li><a href="#here">Test Model</a></li>
+        </ul>
+      </div>
+      {% endif %}
     </div>
   </div>
     <div class="row light-blue darken-4" style="margin-top:10px;" id="here">
@@ -122,10 +194,10 @@
                 <div class="row">
                   <div class="input-field col s12">
                     <input id="testimageB" name="testimageB" type="text" >
-                    <label for="category">Dropbox Url od Zipped File Url</label>
+                    <label for="category">Dropbox Url or Zipped File Url</label>
                   </div>
                   <div class="col s6 m4"></div>
-                    <a class="waves-effect waves-light btn" id="testsubmit"><i class="mdi-editor-format-size
+                    <a class="waves-effect waves-light btn" id="testsubmit" ><i class="mdi-editor-format-size
  left"></i>Test the Class</a>
 
                 </div>
@@ -155,11 +227,25 @@
            toast('First Train the Model and then test it.', 4000);
         }
         else{ 
+          var value = $('#testimageB').val(); 
           var len2 = $('#testimageB').val().length;
           var len1 = $(".dz-size").html();
           if (len1 != null && len2 ){
            toast('You can either use uploaded images or use dropbox url', 4000);
         }
+        else{
+          $.ajax({
+            url     : '/testaclass', // the url where we want to POST
+            data    : {'value':value},
+            type: 'GET',
+            success: function() {   },
+            error: function() {alert("error");},
+          })  
+            .done(function(data) {
+                       toast('Images have been successfully uploaded for testing. :)', 4000);
+                      });
+                  };
+        // }
       }
     });
 </script>​
