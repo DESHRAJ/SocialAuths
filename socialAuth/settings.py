@@ -128,7 +128,6 @@ AUTHENTICATION_BACKENDS = (
 
 LOGIN_REDIRECT_URL = "/dashboard"
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 LOGIN_URL = "/login"
 
@@ -143,3 +142,18 @@ MIDDLEWARE_CLASSES = (
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'desh.py@gmail.com'
+EMAIL_HOST_PASSWORD = 'dineshsumitra'
+
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

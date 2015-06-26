@@ -20,8 +20,10 @@ import zipfile
 
 def home(request):
 	''' View for the home page of the application'''
-	# if request.user.is_authenticated():
-		# return HttpResponseRedirect('/dashboard')
+	if request.user.is_authenticated():
+		print "first_name : ",request.user.first_name
+		print "last_name : ",request.user.last_name
+		print "email : ", request.user.email
 	return render_to_response('material.html')
 
 def dashboard(request):
