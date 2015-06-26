@@ -3,5 +3,5 @@ beautifulsoup4
 zipfile
 urllib2
 requests
-sudo apt-get install python2.7-dev
-pip install Pillow
+Pillow
+django-allauth
