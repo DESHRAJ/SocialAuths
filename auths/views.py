@@ -24,6 +24,7 @@ def home(request):
 		print "first_name : ",request.user.first_name
 		print "last_name : ",request.user.last_name
 		print "email : ", request.user.email
+		print "username : ", request.user.username
 	return render_to_response('material.html')
 
 def dashboard(request):
