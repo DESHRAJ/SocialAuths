@@ -29,7 +29,6 @@ try:
 except ImportError:
     from django.utils.importlib import import_module
 
-
 class PasswordField(forms.CharField):
 
     def __init__(self, *args, **kwargs):
@@ -72,8 +71,7 @@ class LoginForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(LoginForm, self).__init__(*args, **kwargs)
         if app_settings.AUTHENTICATION_METHOD == AuthenticationMethod.EMAIL:
-            login_widget = forms.TextInput(attrs={'type': 'email',
-                                                  'autofocus': 'autofocus'})
+            login_widget = forms.TextInput(attrs={'type': 'email'})
             login_field = forms.EmailField(label=_("E-mail"),
                                            widget=login_widget)
         elif app_settings.AUTHENTICATION_METHOD \
@@ -86,11 +84,9 @@ class LoginForm(forms.Form):
         else:
             assert app_settings.AUTHENTICATION_METHOD \
                 == AuthenticationMethod.USERNAME_EMAIL
-            login_widget = forms.TextInput(attrs={'placeholder':
-                                                  _('Username or e-mail'),
-                                                  'autofocus': 'autofocus'})
+            login_widget = forms.TextInput(attrs={})
             login_field = forms.CharField(label=pgettext("field label",
-                                                         "Login"),
+                                                         "Username or E-mail"),
                                           widget=login_widget)
         self.fields["login"] = login_field
         set_form_field_order(self,  ["login", "password", "remember"])
