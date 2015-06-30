@@ -13,9 +13,6 @@
   <script src="/static/materialize/js/materialize.min.js"></script>          
 </head>
 <style type="text/css">
-  body{
-    background: url('/static/material/texture.jpg') repeat;
-  }
   #title{
     color:rgb(2, 136, 209);
   }
@@ -53,12 +50,21 @@
   font-size: 12px;
   margin: 5px 0 0 0;
 }
+.input-field input[type=text]:focus + label, .input-field input[type=password]:focus + label, .input-field input[type=email]:focus + label, .input-field input[type=url]:focus + label, .input-field input[type=date]:focus + label, .input-field input[type=tel]:focus + label, .input-field input[type=number]:focus + label, .input-field input[type=search]:focus + label, .input-field textarea:focus.materialize-textarea + label {
+  color: #01579b;
+}
+input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, input[type=url]:focus, input[type=date]:focus, input[type=tel]:focus, input[type=number]:focus, input[type=search]:focus, textarea:focus.materialize-textarea {
+  border-bottom: 1px solid #01579b;
+  -webkit-box-shadow: 0 1px 0 0 #01579b;
+  -moz-box-shadow: 0 1px 0 0 #01579b;
+  box-shadow: 0 1px 0 0 #01579b;
+}
 </style>
 <body>
 <header>
   
   <nav>
-    <div class="nav-wrapper blue darken-3">
+    <div class="nav-wrapper light-blue darken-4">
       <a href="#!" class="brand-logo" id="brandlogo">CloudCV</a>
       <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
       <ul class="right hide-on-med-and-down">

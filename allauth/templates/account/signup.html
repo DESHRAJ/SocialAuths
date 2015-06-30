@@ -49,20 +49,21 @@
 }
 #submitbtn{
 	margin-top: 20px;
+  float: left;
 }
 </style>
 <div class="row" >
-  <div class="container z-depth-5" id="nicebox" >
+  <div class="container z-depth-2" id="nicebox" >
   <div align="center">
   	
-    <h3 id="heading">Sign Up</h3>    	
+    <h4 id="heading">Welcome to CloudCV</h4>    	
       	<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
 					{% csrf_token %}
 					{{ form.as_p }}
 					{% if redirect_field_value %}
 						<input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
 					{% endif %}
-					<div id="buttondiv">
+          <div id="buttondiv">
 					<button type="submit" id="submitbtn" class="btn waves-effect blue white-text waves-blue left">{% trans "Sign Up" %} &raquo;</button>
 					</div >
 					<p id="signinpara">{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">Sign in</a>.{% endblocktrans %}</p>
@@ -70,7 +71,6 @@
   			</div>  
 </div>
 </div>
-
 <script type="text/javascript">
     $( document ).ready(function() {
       $('form > p').each(function(){
