@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, include, url
-from auths.views import AddStorage
+from auths.views import *
 urlpatterns = patterns('',
     # url(r'temp1', 'auths.views.temp1', name='temp1'),        
     # url(r'^blog/', include('blog.urls')),
@@ -12,5 +12,7 @@ urlpatterns = patterns('',
     url(r'material', 'auths.views.material', name='material'),
     url(r'^addstorage/$', 'auths.views.storage', name='addstorage'),
     # url(r's3connect', 'auths.views.s3connect', name='s3connect'),
-    url(r'apitest', 'auths.views.storage_api', name='apitest'),
+    url(r'api/upload', 'auths.views.up_storage_api', name='api_upload'),
+    url(r'api/download', 'auths.views.down_storage_api', name='api_download'),
+
 )

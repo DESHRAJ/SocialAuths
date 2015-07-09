@@ -5,6 +5,7 @@
 {% block content %}
 	  <div id="s3modal" class="modal">
 	  <form action="/addstorage/" method="post">
+	  {% csrf_token %}
 	    <div class="modal-content">
 	    <h4 align="center">Add Amazon S3 Cloud Storage</h4>
 	      <div class="row">

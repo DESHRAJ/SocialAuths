@@ -293,78 +293,141 @@ deleteFilesInBucketWithPredicate(bucket_name, filename_predicate)
 
 '''
 from allauth.socialaccount.models import * 
-def apitest(request):
-	providers = []
-	# user = User.objects.get(id = request.user.id)
-	# social_account = SocialAccount.objects.get(user = )
-	tokens = SocialToken.objects.filter(account__user__id = request.user.id)
-	for i in tokens:
-		providers.append(str(i.app))
-	s3 = StorageCredentials.objects.filter(user__id = request.user.id).count()
-	print s3
-	print providers
-	if s3:
-		providers.append("Amazon S3")
-	return render_to_response("upload_to_storage.html",{'p':providers},context_instance = RequestContext(request))
+# def apitest(request):
+# 	providers = []
+# 	# user = User.objects.get(id = request.user.id)
+# 	# social_account = SocialAccount.objects.get(user = )
+# 	tokens = SocialToken.objects.filter(account__user__id = request.user.id)
+# 	for i in tokens:
+# 		providers.append(str(i.app))
+# 	s3 = StorageCredentials.objects.filter(user__id = request.user.id).count()
+# 	print s3
+# 	print providers
+# 	if s3:
+# 		providers.append("Amazon S3")
+# 	return render_to_response("upload_to_storage.html",{'p':providers},context_instance = RequestContext(request))
 
-
-class ApiTest(TemplateView):
-	template_name = "upload_to_storage.html"
+class UploadApiTest(TemplateView):
 	def get(self, request, *args, **kwargs):
 		providers = []
-		# user = User.objects.get(id = request.user.id)
-		# social_account = SocialAccount.objects.get(user = )
 		tokens = SocialToken.objects.filter(account__user__id = request.user.id)
 		for i in tokens:
 			providers.append(str(i.app))
 		s3 = StorageCredentials.objects.filter(user__id = request.user.id).count()
-		print s3
-		print providers
 		if s3:
 			providers.append("Amazon S3")
 		return render_to_response("upload_to_storage.html",{'p':providers},context_instance = RequestContext(request))
-
-		return render_to_response(template_name)
 	
+	@csrf_exempt
 	def post(self,request):
 		print "POST Request to API "
 		storage = request.POST['storageName']
 		path = request.POST['path']
-		images = request.FILES['images']
-		# for i in images:
-		# 	print i.filename
-		for filename, file in request.FILES.iteritems():
-			name = request.FILES[filename].name
-		# print storage
-		# print path
-		# print request.user.id
 		if storage=="Amazon S3":
-			bucket = request.POST['bucket']
-			s3 = StorageCredentials.objects.get(user__id = request.user.id)
-			# put_data_on_s3(request,path)
-			print "Its S3"
+			result = put_data_on_s3(request,path)
 		else:
 			social_token = SocialToken.objects.get(account__user__id = request.user.id, app__name = storage)
 			print "Its ",storage
-		return HttpResponseRedirect(reverse("apitest"))
+		return HttpResponse(json.dumps(result), content_type="application/json")
+
+
+class DownloadApiTest(TemplateView):
+	def get(self, request, *args, **kwargs):
+		providers = []
+		tokens = SocialToken.objects.filter(account__user__id = request.user.id)
+		for i in tokens:
+			providers.append(str(i.app))
+		s3 = StorageCredentials.objects.filter(user__id = request.user.id).count()
+		if s3:
+			providers.append("Amazon S3")
+		return render_to_response("download_from_storage.html",{'p':providers},context_instance = RequestContext(request))
+	
+	def post(self,request):
+		path = request.POST['path']
+		storage = request.POST['storageName']
+		if storage=="Amazon S3":
+			result = get_data_from_s3(request,path)
+		else:
+			social_token = SocialToken.objects.get(account__user__id = request.user.id, app__name = storage)
+			print "Its ",storage
+		return HttpResponse(json.dumps(result), content_type="application/json")
+
+
+
 
 from boto.s3.connection import * 
 
-def put_data_on_s3(request,path,bucket):
-	images = request.FILES['images']
+import json
+import traceback 
+def put_data_on_s3(request,path):
+	result = {}
+	bucket = request.POST["bucket"]
+	result['pathProvided'] = request.POST['path']
+	result['bucket'] = bucket
+	result['storage'] = request.POST['storageName']
+	result['user'] = request.user.email
+	result['uplaodedTo'] = []
+	images = request.FILES.getlist('images')
+	if str(path)[-1]!="/":
+		path = str(path)+"/"
 	s3 = StorageCredentials.objects.get(user__id = request.user.id)
 	conn = S3Connection(s3.aws_access_key,s3.aws_access_secret)
 	try:
 		b = conn.get_bucket(bucket)
 	except:
 		b = conn.create_bucket(bucket)
-	k = Key(b)
-	k.key = path
-	k.set_contents_from_filename("/home/pydev/code.txt")
-	k.get_contents_as_string()
-	for i in b.list():
-		print i.name.encode('utf-8')
+	for i in images:
+		destination = open('/media/' + (i.name).encode('utf-8'), 'wb+')
+		for chunk in i.chunks():
+			destination.write(chunk)
+		destination.close()
+		k = Key(b)
+		k.key = path+str(i.name).encode("utf-8")
+		result['uplaodedTo'].append(k.key)
+		k.set_contents_from_filename("/media/" + str(i.name).encode("utf-8"))
+	return result
 
 
-storage_api = login_required(ApiTest.as_view())
-# bucket_entries = bucket.list(prefix='/path/to/your/directory')
+def get_data_from_s3(request,path):
+	result = {}
+	bucket = request.POST["bucket"]
+	# result['location'] = request.POST['path']
+	result['user'] = request.user.email
+	result['storage'] = request.POST['storageName']
+	result['bucket'] = bucket
+	result['location']= []
+	result['downloadTo'] = []
+	if str(path)[-1]!="/":
+		path = str(path)+"/"
+	s3 = StorageCredentials.objects.get(user__id = request.user.id)
+	conn = S3Connection(s3.aws_access_key,s3.aws_access_secret)
+	try:
+		b = conn.get_bucket(bucket)
+	except:
+		print "NO BUCKET FOUND"
+	bucket_entries = b.list(path[1:])
+	for i in bucket_entries:
+		result['location'].append(i.key)
+		# print "Working"
+		print i.key
+		file_name = str(i.key).split("/")[-1]
+		result['downloadTo'].append("/media/"+file_name)
+		i.get_contents_to_filename("/media/"+file_name)
+	# conn.downloadFilesInBucketWithPredicate(bucket, bucket_entries,"/media/")
+	# except:
+		# print "#### ERRRRRORRRRRR  #####"
+		# return HttpResponse(str(traceback.format_exc())
+	# for i in bucket_entries:
+	# 	# download files with names that satisfy 'filename_predicate' from 'bucket_name' to 'local_download_directory'
+	# 	destination = open('/media/' + (i.name).encode('utf-8'), 'wb+')
+	# 	for chunk in i.chunks():
+	# 		destination.write(chunk)
+	# 	destination.close()
+	# 	k = Key(b)
+	# 	k.key = path+str(i.name).encode("utf-8")
+	# 	k.set_contents_from_filename("/media/" + str(i.name).encode("utf-8"))
+	return result
+
+up_storage_api = login_required(UploadApiTest.as_view())
+down_storage_api = login_required(DownloadApiTest.as_view())
+

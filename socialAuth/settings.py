@@ -91,6 +91,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
+MEDIA_ROOT = '/media/'
 
 STATIC_URL = '/static/'
 STATIC_ROOT = "static"
@@ -112,12 +113,16 @@ STATICFILES_DIRS = (
 
 
 TEMPLATE_CONTEXT_PROCESSORS = (
-    # Required by allauth template tags
     'django.contrib.auth.context_processors.auth',
-    "django.core.context_processors.request",
-    # allauth specific context processors
-    "allauth.account.context_processors.account",
-    "allauth.socialaccount.context_processors.socialaccount",
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+    'django.core.context_processors.tz',
+    'django.core.context_processors.request',    
+    'django.contrib.messages.context_processors.messages',
+    'allauth.account.context_processors.account',
+    'allauth.socialaccount.context_processors.socialaccount',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -166,3 +171,4 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # SILENCED_SYSTEM_CHECKS = ["auth.W004"]
 
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+

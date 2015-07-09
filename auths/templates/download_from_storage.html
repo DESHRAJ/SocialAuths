@@ -6,8 +6,8 @@
 <main>
 <div class="row dashboardControls">
 	<div class="container">
-		<h3>Upload API</h3>
-	 <form action="/api/upload/" method="post" enctype="multipart/form-data">
+		<h3>Download: Cloud Storage -> CloudCV</h3>
+	 <form action="/api/download" method="post" enctype="multipart/form-data">
    {% csrf_token %}
 	 {% for i in p %}
     <p>
@@ -18,29 +18,15 @@
     <div class="row bucketClass">
       <div class="input-field col s12 m12 l8">
         <input id="path" placeholder="Only for Amazon S3" name="bucket" type="text" class="validate"/>
-        <label for="path">Existing Bucket Name or Create a New Bucket</label>
+        <label for="path">Existing Bucket Name</label>
       </div>
     </div>
     <div class="row">
       <div class="input-field col s12 m12 l8">
         <input id="path" placeholder="For eg. /home/pydev/Desktop/" name="path" type="text" class="validate"/>
-        <label for="path">Path to Upload</label>
+        <label for="path">Location of Directory that contains all files</label>
       </div>
     </div>
-    <div class="row">
-      
-    <div class="col s12 m12 l8">
-  <!--     <div class="btn white">
-        <span>Add Files</span>
-        <input type="file" name="images" multiple/>
-      </div>
-      <input class="file-path validate" type="text" />
-    </div>
-
-   -->  
-   <input type="file" name="images" multiple>
-   </div>
-   </div>
     <div class="row">
     <div class="col s12">
     <button class="btn waves-effect waves-light blue darken-1 white-text" type="submit">Submit</button>
