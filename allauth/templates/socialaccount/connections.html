@@ -1,4 +1,4 @@
-{% extends "socialaccount/base.html" %}
+{% extends "dashboard_base.html" %}
 
 {% load i18n %}
 
@@ -67,9 +67,15 @@
 		background-color: #C33B2B;
 		width: 80%;
 }
+#login3{
+		background-color: white;
+		width: 80%;
+}
 </style>
 <body>
 	<main>
+	<div class="dashboardControls center">
+		
 		<h4 id="heading">{% trans "Cloud Storages" %}</h4>
 		{% if form.accounts %}
 			<p align="center">{% blocktrans %}You can use CloudCV using any of the listed Cloud Sotrages: {% endblocktrans %}</p>
@@ -102,12 +108,9 @@
 			{% endif %}
 			<h4 id="heading">{% trans 'Add a Cloud Storage' %}</h4>
 			<div class="row" >
-			<div class="col s12 m12 l12">
-				<div class="row">
 					<div class="col s12 m12 l4" align="center">
 						<a class="btn-large waves-effect waves-red" id="login1" href="/google/login/?process=login"><img src="/static/material/gd.png" style="vertical-align: middle; padding-left: 8px;"> Google</a>
 					</div>
-				</div>
 					
 			</div>
 			<div class="row">
@@ -115,33 +118,61 @@
 					<a class="btn-large waves-effect waves-blue"  id="login2" href="/dropbox/login/?process=login"><img src="/static/material/dropbox.png" style="vertical-align: middle; padding-left: 8px;"> Dropbbox</a>
 				</div>
 			</div>
+			<div class="row" align="center">
+				<div class="col s12 m12 l4" id="div2" align="center">
+					<a class="btn-large waves-effect waves-light modal-trigger" href="#s3modal" id="login3"> Amazon S3</a>
+				</div>
+			</div>
+				<div id="s3modal" class="modal">
+					<div class="modal-content">
+						<div class="row">
+							<div class="center input-field col s12 m12 l8">
+								<input id="key" type="text" class="validate">
+								<label for="key">AWS Access Key</label>
+							</div>
+						</div>
+						<div class="row">
+							<div class="center input-field col s12 m12 l8">
+								<input id="secret" type="password" class="validate">
+								<label for="secret">AWS Access Secret</label>
+							</div>
+						</div>
+						<button class="modal-action modal-close center z-index-1 btn waves-effect waves-light white s3button">Add Key and Secret</button>
+					</div>
+				</div>
 			</div>
 		<!-- {% include "socialaccount/snippets/login_extra.html" %} -->	      
+	</div>
 	</main>
-	<footer class="page-footer light-blue darken-4" id="footer">
-		<div class="container">
-			<div class="row">
-				<div class="col l6 s12">
-					<h5 class="white-text">Images on Cloud</h5>
-					<p class="grey-text text-lighten-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-				</div>
-				<div class="col l4 offset-l2 s12">
-					<h5 class="white-text">Links</h5>
-					<ul>
-						<li><a class="grey-text text-lighten-3" href="#!">About us</a></li>
-						<li><a class="grey-text text-lighten-3" href="#!">Our Team</a></li>
-						<li><a class="grey-text text-lighten-3" href="#!">Contact us</a></li>
-					</ul>
-				</div>
-			</div>
-		</div>
-		<div class="footer-copyright">
-			<div class="container">
-			© 2015 Copyright CloudCV
-			<a class="grey-text text-lighten-4 right" href="#!">CloudCV Home Page</a>
-			</div>
-		</div>
-	</footer>
+		<script type="text/javascript">
+			$(document).ready(function(){
+		$('.modal-trigger').leanModal({
+				dismissible: true, // Modal can be dismissed by clicking outside of the modal
+				opacity: .5, // Opacity of modal background
+				in_duration: 300, // Transition in duration
+				out_duration: 200, // Transition out duration
+				// ready: function() { alert('Ready'); }, // Callback for Modal open
+				// complete: function() { alert('Closed'); } // Callback for Modal close
+			});
+
+		$(".s3button").click(function(){
+			var key = $('#key').val();
+			var secret = $('#secret').val();
+			$.ajax({
+					url: '/s3connect',
+					type: 'POST',
+					data: { key:key, secret :secret } ,
+					// contentType: 'application/json; charset=utf-8',
+					success: function (response) {
+							Materialize.toast('Successfully Added the Amazon S3 Key and Secret!', 4000);
+					},
+					error: function () {
+							Materialize.toast('Something wrong happened. Please try again!', 4000);
+					}
+			}); 
+	});
+		});
+	</script>
 	<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 	<script src="/static/material/js/materialize.js"></script>
 	<script src="/static/material/js/init.js"></script>

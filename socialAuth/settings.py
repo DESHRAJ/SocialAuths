@@ -32,6 +32,7 @@ SITE_ID = 3
 # Application definition
 
 INSTALLED_APPS = (
+    'auths',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',

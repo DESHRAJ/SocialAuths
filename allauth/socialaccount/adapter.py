@@ -115,6 +115,7 @@ class DefaultSocialAccountAdapter(object):
         """
         assert request.user.is_authenticated()
         url = reverse('socialaccount_connections')
+        # url = "/addstorage"
         return url
 
     def validate_disconnect(self, account, accounts):

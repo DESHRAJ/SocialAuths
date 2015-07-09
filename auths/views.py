@@ -29,7 +29,7 @@ def home(request):
 
 def dashboard(request):
 	''' View of Dashboard page for user after logging in using the Social Account '''
-	return render_to_response('muitrain.html',{'user':request.user},context_instance = RequestContext(request))
+	return render_to_response('cloudcvtest.html',{'user':request.user},context_instance = RequestContext(request))
 
 def trainModel(request):
 	''' View for training the model after fetching the results from google/flickr etc'''
@@ -159,5 +159,212 @@ def material(request):
 def temp(request):
 	return render_to_response("mdashboard.html")
 
-def temp1(request):
-	return render_to_response("testing.html")
+#################################################################################################################
+
+
+from django.contrib.auth.models import User
+from auths.models import *
+# from app.models import *
+
+# @csrf_exempt
+# @login_required
+# def s3connect(request):
+# 	credentials = None
+# 	print request.user.first_name
+# 	# if request.is_ajax():
+# 	if request.user.is_authenticated():
+# 		print "!!!!!!!!!!!!!!!!!!!"
+# 		if request.method=="POST":
+# 			print "@@@@@@@@@@@@@"
+# 			key = request.POST['key']
+# 			secret = request.POST['secret']
+# 			print key
+# 			print secret
+# 			print request.user.id
+# 			# StorageCredentials.objectes.create(aws_access_key = key, aws_access_secret = secret, user = request.user).save()
+# 			# try:
+# 			user = User.objects.get(id=request.user.id)
+# 			StorageCredentials.objects.create(aws_access_key = str(key), aws_access_secret = str(secret), user = user).save()
+# 			print "TRY"
+# 			# credentials.save()
+# 				# except:
+# 					# credentials = None
+# 					# print "EXCEPT"
+# 	return HttpResponseRedirect("/addstorage")
+
+def addstorage(request):
+	return render_to_response("add_storage.html")
+
+
+from django.views.generic.edit import FormView
+from django.core.urlresolvers import reverse, reverse_lazy
+from django.contrib.auth.decorators import login_required
+from allauth.socialaccount.views import *
+
+class AddStorage(FormView):
+	template_name = "add_storage.html"
+	form_class = DisconnectForm
+	success_url = "/addstorage"
+
+	# def get(self, request, *args, **kwargs):
+	# 	return render_to_response("add_storage.html")
+
+	def get_form_class(self):
+		return get_form_class(app_settings.FORMS,
+							  'disconnect',
+							  self.form_class)
+
+	def get_form_kwargs(self):
+		kwargs = super(AddStorage, self).get_form_kwargs()
+		kwargs["request"] = self.request
+		return kwargs
+
+	def form_valid(self, form):
+		get_account_adapter().add_message(self.request,
+										  messages.INFO,
+										  'socialaccount/messages/'
+										  'account_disconnected.txt')
+		form.save()
+		return super(AddStorage, self).form_valid(form)
+	
+	def post(self,request):
+		if request.user.is_authenticated():
+			if request.method=="POST":
+				key = request.POST['key']
+				secret = request.POST['secret']
+				print key
+				print secret
+				print request.user.id
+				# try:
+				user = User.objects.get(id=request.user.id)
+				StorageCredentials.objects.create(aws_access_key = str(key), aws_access_secret = str(secret), user = user).save()
+				print "TRY"
+		return HttpResponseRedirect("/addstorage/")
+
+storage = login_required(AddStorage.as_view())
+
+from boto.s3.connection import S3Connection,Key
+@login_required
+def get_from_s3(request):
+	path_to_download = ""
+	# user = User.objects.get(id = request.user.id)
+	# if request.method=="POST":
+
+		# provider = request.POST['provider']
+		# if provider.lower()=="dropbox":
+			# s3_instance = request.POST['']
+			# conn = S3Connection(, )
+
+
+'''
+
+AWS S3 Working for CloudCV
+
+from boto.s3.connection import * 
+conn = S3Connection("AKIAJISUCCBNYECJPTIA","1tLIgzgYIpGXlP3WGDeAXW2t4b+GU1QT7k/STi/J")
+b = conn.get_bucket("cloudcv")
+k = Key(b)
+k.key = "/home/test.txt"  
+k.set_contents_from_filename("/home/pydev/code.txt")
+k.get_contents_as_string()
+for i in b.list():
+	print i.name.encode('utf-8')
+
+bucket_entries = bucket.list(prefix='/path/to/your/directory')
+
+
+# returns a list of files stored in bucket 'bucket_name'
+getFileNamesInBucket(bucket_name)
+ 
+# download a file named 'filename' from bucket 'bucket_name' to 'local_download_directory'
+downloadFileFromBucket(bucket_name, filename, local_download_directory)
+ 
+# download all of the files in bucket 'bucket_name' to the 'local_download_directory"
+downloadAllFilesFromBucket(bucket_name, local_download_directory)
+ 
+# delete all files in bucket 'bucket_name'
+deleteAllFilesFromBucket(bucket_name)
+ 
+# download files with names that satisfy 'filename_predicate' from 'bucket_name' to 'local_download_directory'
+downloadFilesInBucketWithPredicate(bucket_name, filename_predicate, local_download_directory)
+ 
+# delete files with names that satisfy 'filename_predicate' from 'bucket_name'
+deleteFilesInBucketWithPredicate(bucket_name, filename_predicate)
+
+'''
+from allauth.socialaccount.models import * 
+def apitest(request):
+	providers = []
+	# user = User.objects.get(id = request.user.id)
+	# social_account = SocialAccount.objects.get(user = )
+	tokens = SocialToken.objects.filter(account__user__id = request.user.id)
+	for i in tokens:
+		providers.append(str(i.app))
+	s3 = StorageCredentials.objects.filter(user__id = request.user.id).count()
+	print s3
+	print providers
+	if s3:
+		providers.append("Amazon S3")
+	return render_to_response("upload_to_storage.html",{'p':providers},context_instance = RequestContext(request))
+
+
+class ApiTest(TemplateView):
+	template_name = "upload_to_storage.html"
+	def get(self, request, *args, **kwargs):
+		providers = []
+		# user = User.objects.get(id = request.user.id)
+		# social_account = SocialAccount.objects.get(user = )
+		tokens = SocialToken.objects.filter(account__user__id = request.user.id)
+		for i in tokens:
+			providers.append(str(i.app))
+		s3 = StorageCredentials.objects.filter(user__id = request.user.id).count()
+		print s3
+		print providers
+		if s3:
+			providers.append("Amazon S3")
+		return render_to_response("upload_to_storage.html",{'p':providers},context_instance = RequestContext(request))
+
+		return render_to_response(template_name)
+	
+	def post(self,request):
+		print "POST Request to API "
+		storage = request.POST['storageName']
+		path = request.POST['path']
+		images = request.FILES['images']
+		# for i in images:
+		# 	print i.filename
+		for filename, file in request.FILES.iteritems():
+			name = request.FILES[filename].name
+		# print storage
+		# print path
+		# print request.user.id
+		if storage=="Amazon S3":
+			bucket = request.POST['bucket']
+			s3 = StorageCredentials.objects.get(user__id = request.user.id)
+			# put_data_on_s3(request,path)
+			print "Its S3"
+		else:
+			social_token = SocialToken.objects.get(account__user__id = request.user.id, app__name = storage)
+			print "Its ",storage
+		return HttpResponseRedirect(reverse("apitest"))
+
+from boto.s3.connection import * 
+
+def put_data_on_s3(request,path,bucket):
+	images = request.FILES['images']
+	s3 = StorageCredentials.objects.get(user__id = request.user.id)
+	conn = S3Connection(s3.aws_access_key,s3.aws_access_secret)
+	try:
+		b = conn.get_bucket(bucket)
+	except:
+		b = conn.create_bucket(bucket)
+	k = Key(b)
+	k.key = path
+	k.set_contents_from_filename("/home/pydev/code.txt")
+	k.get_contents_as_string()
+	for i in b.list():
+		print i.name.encode('utf-8')
+
+
+storage_api = login_required(ApiTest.as_view())
+# bucket_entries = bucket.list(prefix='/path/to/your/directory')
